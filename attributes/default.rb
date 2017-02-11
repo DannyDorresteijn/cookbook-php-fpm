@@ -12,10 +12,16 @@ else
   group = "www-data"
   conf_dir = "/etc/php5/fpm/conf.d"
   pool_conf_dir = "/etc/php5/fpm/pool.d"
-  if node.platform == "ubuntu" and node.platform_version.to_f <= 10.04
-    conf_file = "/etc/php5/fpm/php5-fpm.conf"
-  else
-    conf_file = "/etc/php5/fpm/php-fpm.conf"
+  if node.platform == "ubuntu" 
+    if node.platform_version.to_f <= 10.04
+      conf_file = "/etc/php5/fpm/php5-fpm.conf"
+    elsif node.platform_version.to_f <= 16.04
+      conf_file = "/etc/php/5.6/fpm/php-fpm.conf"
+      pool_conf_dir = "/etc/php/5.6/fpm/pool.d"
+      default['php-fpm']['package_name'] = 'php5.6-fpm'
+    else
+      conf_file = "/etc/php5/fpm/php-fpm.conf"
+    end
   end
   error_log = "/var/log/php5-fpm.log"
   pid ="/var/run/php5-fpm.pid"

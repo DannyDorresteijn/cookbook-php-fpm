@@ -31,9 +31,18 @@ when 'ubuntu'
       key "8D0DC64F"
       action :add
     end
-    # FIXME: apt-get update didn't trigger in above
-    execute "apt-get update"
+  elsif node['platform_version'].to_f <= 16.04
+    # Configure Ondrej's PPA
+    # We'll install php5.6-fpm from the Brian's PPA backports
+    apt_repository "ondrej" do
+      uri 'ppa:ondrej/php' 
+      components ['main']
+      key '4F4EA0AAE5267A6C'
+      keyserver 'keyserver.ubuntu.com'
+      action :add
+    end
   end
+  execute "apt-get update"
 when 'debian'
   # Configure Dotdeb repos
   # TODO: move this to it's own 'dotdeb' cookbook?
