@@ -13,6 +13,10 @@ else
   if platform?('ubuntu') and node.platform_version.to_f >= 16.04
     php_conf_dir = "/etc/php/7.0"
     php_fpm_name = "php7.0-fpm"
+  elsif platform?('ubuntu') and node.platform_version.to_f < 16.04
+    php_conf_dir = "/etc/php/5.6"
+    php_fpm_name = "php5.6-fpm"
+    default['php-fpm']['package_name'] = 'php5.6-fpm'
   else
     php_conf_dir = "/etc/php5"
     php_fpm_name = "php5-fpm"
@@ -21,6 +25,8 @@ else
   pool_conf_dir = "#{php_conf_dir}/fpm/pool.d"
   if node.platform == "ubuntu" and node.platform_version.to_f <= 10.04
     conf_file = "#{php_conf_dir}/fpm/php5-fpm.conf"
+  elsif platform?('ubuntu') and node.platform_version.to_f < 16.04
+    conf_file = "#{php_conf_dir}/fpm/php5.6-fpm.conf"
   else
     conf_file = "#{php_conf_dir}/fpm/php-fpm.conf"
   end
